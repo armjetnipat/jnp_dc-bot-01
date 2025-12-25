@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { Client, GatewayIntentBits, ChannelType, REST, Routes, EmbedBuilder } = require('discord.js');
+const { Client, GatewayIntentBits, ChannelType, REST, Routes, ApplicationCommandOptionType } = require('discord.js');
 
 const client = new Client({
     intents: [
@@ -20,7 +20,7 @@ const commands = [
             {
                 name: 'name',
                 description: 'Category name',
-                type: 3, // STRING
+                type: ApplicationCommandOptionType.String, // STRING
                 required: true
             }
         ]
@@ -32,14 +32,38 @@ client.on("clientReady", async readyClient => {
     console.log(`Logged in as ${readyClient.user.tag}!`);
 
     try {
-        console.log('Started refreshing application (/) commands.');
+        console.log('Clearing guild commands...');
+        await rest.put(
+            Routes.applicationGuildCommands(
+                readyClient.user.id,
+                process.env.GUILD_ID
+            ),
+            { body: [] }
+        );
 
-        await rest.put(Routes.applicationGuildCommands(readyClient.user.id, process.env.GUILD_ID), { body: commands });
+        console.log('Loading new guild commands...');
+        await rest.put(
+            Routes.applicationGuildCommands(
+                readyClient.user.id,
+                process.env.GUILD_ID
+            ),
+            { body: commands }
+        );
 
-        console.log('Successfully reloaded application (/) commands.');
-    } catch (error) {
-        console.error(error);
+        console.log('Guild commands reloaded successfully');
+    } catch (err) {
+        console.error(err);
     }
+
+    client.user.setPresence({
+        status: 'online', // online | idle | dnd | invisible
+        activities: [
+            {
+                name: 'JNP Discord Server',
+                type: 0 // PLAYING
+            }
+        ]
+    });
 });
 
 client.on("interactionCreate", async interaction => {
