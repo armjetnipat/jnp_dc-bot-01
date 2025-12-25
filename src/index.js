@@ -27,20 +27,6 @@ const commands = [
     }
 ];
 
-const logFunction = async function(interaction) {
-    const logChannel = guild.channels.cache.get(process.env.LOG_CHANNEL_ID);
-    const embed = new EmbedBuilder()
-        .setTitle(`มีผู้ใช้งานคำสั่ง (${interaction.commandName})`)
-        .addFields([
-            { name: 'User', value: `${interaction.user.tag} (${interaction.user.id})` },
-            { name: 'Guild', value: `${guild.name} (${guild.id})` },
-            { name: 'Channel', value: `${interaction.channel.name} (${interaction.channel.id})` },
-        ])
-        .setTimestamp();
-
-    await logChannel.send({ embeds: [embed] });
-}
-
 client.on("clientReady", async readyClient => {
     console.clear()
     console.log(`Logged in as ${readyClient.user.tag}!`);
