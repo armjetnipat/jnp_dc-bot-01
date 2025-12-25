@@ -88,8 +88,4 @@ client.on("interactionCreate", async interaction => {
 
 });
 
-client.on("messageCreate", async (msg) => {
-    if (msg.author.bot) return;
-})
-
 client.login(process.env.TOKEN);
