@@ -8,21 +8,12 @@ pipeline {
     }
 
     stages {
-        stage('Install depens') {
+        stage('Deploy') {
             steps {
-                script {
-                    sh 'npm i'
-                }
-            }
-        }
-
-        stage('Run node Script') {
-            steps {
-                script {
-                    sh 'ls -l'
-                    sh 'node src/index.js'
-                    
-                }
+                sh '''
+                docker-compose down
+                docker-compose up -d --build
+                '''
             }
         }
     }
