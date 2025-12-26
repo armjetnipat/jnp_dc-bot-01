@@ -27,15 +27,20 @@ const commands = [
     }
 ];
 
-client.on("clientReady", async readyClient => {
-    console.clear()
-    console.log(`Logged in as ${readyClient.user.tag}!`);
+client.once("ready", async client => {
+    console.clear();
+    console.log(`Logged in as ${client.user.tag}!`);
+
+    if (!process.env.GUILD_ID || !process.env.CLIENT_ID) {
+        console.error('❌ Missing GUILD_ID or CLIENT_ID');
+        return;
+    }
 
     try {
         console.log('Clearing guild commands...');
         await rest.put(
             Routes.applicationGuildCommands(
-                readyClient.user.id,
+                process.env.CLIENT_ID,
                 process.env.GUILD_ID
             ),
             { body: [] }
@@ -44,27 +49,28 @@ client.on("clientReady", async readyClient => {
         console.log('Loading new guild commands...');
         await rest.put(
             Routes.applicationGuildCommands(
-                readyClient.user.id,
+                process.env.CLIENT_ID,
                 process.env.GUILD_ID
             ),
             { body: commands }
         );
 
-        console.log('Guild commands reloaded successfully');
+        console.log('Guild commands reloaded successfully ✅');
     } catch (err) {
-        console.error(err);
+        console.error('❌ Command deploy failed', err);
     }
 
     client.user.setPresence({
-        status: 'online', // online | idle | dnd | invisible
+        status: 'online',
         activities: [
             {
                 name: 'JNP Discord Server',
-                type: 0 // PLAYING
+                type: 0
             }
         ]
     });
 });
+
 
 client.on("interactionCreate", async interaction => {
     if (!interaction.isChatInputCommand()) return;
