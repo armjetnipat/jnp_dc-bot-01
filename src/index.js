@@ -63,11 +63,6 @@ client.once("clientReady", async client => {
 
     const isSame = JSON.stringify(local) === JSON.stringify(remote);
 
-    /* if (!isSame) {
-        console.log('LOCAL:', JSON.stringify(local, null, 2));
-        console.log('REMOTE:', JSON.stringify(remote, null, 2));
-    } */
-
     if (!isSame) {
         await console.log('Commands changed → redeploying');
         await rest.put(
