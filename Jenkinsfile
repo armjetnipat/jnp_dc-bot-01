@@ -7,6 +7,10 @@ pipeline {
     CLIENT_ID = "1452912537711546378"
   }
 
+  triggers {
+    githubPush()
+  }
+
   stages {
     stage('Build') {
       steps {
