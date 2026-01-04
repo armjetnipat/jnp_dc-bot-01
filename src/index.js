@@ -12,6 +12,7 @@ const client = new Client({
 
 const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
 
+const clearCommand = false;
 const commands = [
     {
         name: 'createcat',
@@ -19,7 +20,7 @@ const commands = [
         options: [
             {
                 name: 'name',
-                description: 'Category name',
+                description: 'Category name!',
                 type: ApplicationCommandOptionType.String, // STRING
                 required: true
             }
@@ -27,7 +28,22 @@ const commands = [
     }
 ];
 
-client.once("ready", async client => {
+function normalizeCommands(commands) {
+    return commands.map(cmd => ({
+        name: cmd.name,
+        description: cmd.description,
+        options: (cmd.options ?? []).map(opt => ({
+            name: opt.name,
+            description: opt.description,
+            type: opt.type,
+            required: opt.required ?? false,
+            choices: opt.choices ?? []
+        }))
+    }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+};
+
+client.once("clientReady", async client => {
     console.clear();
     console.log(`Logged in as ${client.user.tag}!`);
 
@@ -36,17 +52,25 @@ client.once("ready", async client => {
         return;
     }
 
-    try {
-        console.log('Clearing guild commands...');
-        await rest.put(
-            Routes.applicationGuildCommands(
-                process.env.CLIENT_ID,
-                process.env.GUILD_ID
-            ),
-            { body: [] }
-        );
+    const remoteCommands = await rest.get(
+        Routes.applicationGuildCommands(
+            process.env.CLIENT_ID,
+            process.env.GUILD_ID
+        )
+    );
 
-        console.log('Loading new guild commands...');
+    const local = normalizeCommands(commands);
+    const remote = normalizeCommands(remoteCommands);
+
+    const isSame = JSON.stringify(local) === JSON.stringify(remote);
+
+    /* if (!isSame) {
+        console.log('LOCAL:', JSON.stringify(local, null, 2));
+        console.log('REMOTE:', JSON.stringify(remote, null, 2));
+    } */
+
+    if (!isSame) {
+        await console.log('Commands changed → redeploying');
         await rest.put(
             Routes.applicationGuildCommands(
                 process.env.CLIENT_ID,
@@ -54,10 +78,9 @@ client.once("ready", async client => {
             ),
             { body: commands }
         );
-
-        console.log('Guild commands reloaded successfully ✅');
-    } catch (err) {
-        console.error('❌ Command deploy failed', err);
+        console.log('Commands redeployed successfully');
+    } else {
+        console.log('Commands unchanged → skip deploy');
     }
 
     client.user.setPresence({
