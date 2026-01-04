@@ -12,7 +12,6 @@ const client = new Client({
 
 const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
 
-const clearCommand = false;
 const commands = [
     {
         name: 'createcat',
