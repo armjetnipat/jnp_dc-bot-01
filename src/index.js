@@ -135,4 +135,29 @@ client.on("interactionCreate", async interaction => {
 
 });
 
+client.on('messageCreate', async message => {
+    if (message.author.bot) return;
+
+    const rules = [
+        {
+            channelId: '1452926114279329888',
+            toChannelId: '1452926112333299743',
+            message: authorId =>
+                `👋🏻 <@&1452896740330967071> We have new message from <@${authorId}>\n\nURL: ${message.url}`
+        }
+    ];
+
+    const rule = rules.find(r => r.channelId === message.channel.id);
+    if (!rule) return;
+
+    const targetChannel = await client.channels.fetch(rule.toChannelId);
+    if (!targetChannel) return;
+
+    await targetChannel.send(
+        typeof rule.message === 'function'
+            ? rule.message(message.author.id)
+            : rule.message
+    );
+});
+
 client.login(process.env.TOKEN);
