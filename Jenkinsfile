@@ -7,7 +7,7 @@ pipeline {
     SSH_CRED_ID   = 'SSH_SV_01' // ID ที่เราตั้งใน Jenkins Credentials
     REMOTE_IP     = '192.168.1.200'
     REMOTE_USER   = 'root' 
-    TARGET_DIR    = '~/discord-bot' // โฟลเดอร์ที่จะเอาโค้ดไปวาง
+    TARGET_DIR    = '~/jnp-discord-bot-01' // โฟลเดอร์ที่จะเอาโค้ดไปวาง
     GUILD_ID      = "1392216672781205595"
     CLIENT_ID     = "1452912537711546378"
   }
@@ -29,7 +29,7 @@ pipeline {
           sh """
             ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_IP} '
               cd ${TARGET_DIR} && \
-              docker build -t discord-bot .
+              docker build -t jnp-discord-bot-01 .
             '
           """
         }
@@ -43,13 +43,13 @@ pipeline {
           // หมายเหตุ: ต้องส่งค่า Environment Variables เข้าไปด้วย
           sh """
             ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_IP} '
-              docker rm -f discord-bot || true && \
+              docker rm -f jnp-discord-bot-01 || true && \
               docker run -d \
-                --name discord-bot \
+                --name jnp-discord-bot-01 \
                 -e TOKEN=${TOKEN} \
                 -e GUILD_ID=${GUILD_ID} \
                 -e CLIENT_ID=${CLIENT_ID} \
-                discord-bot
+                jnp-discord-bot-01
             '
           """
         }
