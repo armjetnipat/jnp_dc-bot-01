@@ -12,7 +12,7 @@ pipeline {
 
     // ===== BOT =====
     IMAGE_NAME = 'jnp_dc-bot-01:latest'
-    TOKEN      = credentials('TOKEN')
+    TOKEN      = credentials('DC_TOKEN-01')
     GUILD_ID   = '1392216672781205595'
     CLIENT_ID  = '1452912537711546378'
   }
