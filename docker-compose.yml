@@ -3,7 +3,7 @@ version: "3.8"
 services:
   bot:
     build: .
-    container_name: discord-bot
+    container_name: jnp_dc-bot-01
     restart: always
     environment:
       TOKEN: ${TOKEN}
