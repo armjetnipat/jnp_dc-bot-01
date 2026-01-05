@@ -38,17 +38,17 @@ pipeline {
               git pull origin main
             fi
 
-            docker build -t jnp_dc-bot-01 .
+            docker build -t jnp-dc-bot-01 .
 
-            docker rm -f jnp_dc-bot-01 || true
+            docker rm -f jnp-dc-bot-01 || true
 
             docker run -d \
-              --name jnp_dc-bot-01 \
+              --name jnp-dc-bot-01 \
               --restart unless-stopped \
               -e TOKEN='${TOKEN}' \
               -e GUILD_ID='${GUILD_ID}' \
               -e CLIENT_ID='${CLIENT_ID}' \
-              jnp_dc-bot-01
+              jnp-dc-bot-01
           EOF
           """
         }
