@@ -32,6 +32,7 @@ pipeline {
             if [ ! -d "${BOT_DIR}" ]; then
               echo "[INIT] Creating bot directory"
               git clone https://github.com/armjetnipat/jnp_dc-bot-01.git
+              cd ${BOT_DIR}
             else
               cd ${BOT_DIR}
               git pull origin main
