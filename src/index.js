@@ -19,7 +19,19 @@ const commands = [
         options: [
             {
                 name: 'name',
-                description: 'Category name!',
+                description: 'Category name',
+                type: ApplicationCommandOptionType.String, // STRING
+                required: true
+            }
+        ]
+    },
+    {
+        name: 'deletecat',
+        description: 'Delete category',
+        options: [
+            {
+                name: 'id',
+                description: 'Category id',
                 type: ApplicationCommandOptionType.String, // STRING
                 required: true
             }
@@ -129,6 +141,19 @@ client.on("interactionCreate", async interaction => {
 
         await interaction.editReply({
             content: `Created ${categoryName} successfully with ${newChannels.length} channels`,
+            ephemeral: true
+        });
+    }
+
+    if (interaction.commandName === 'deletecat') {
+        let categoryId = interaction.options.getString('id');
+        let category = await guild.channels.fetch(categoryId);
+
+        await category.children.cache.map(c => c.delete());
+        await category.delete();
+
+        await interaction.reply({
+            content: `Deleted ${category.name} successfully`,
             ephemeral: true
         });
     }
