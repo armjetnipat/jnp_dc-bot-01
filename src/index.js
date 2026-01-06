@@ -127,7 +127,7 @@ client.on("interactionCreate", async interaction => {
             }
         }
 
-        await interaction.reply({
+        await interaction.editReply({
             content: `Created ${categoryName} successfully with ${newChannels.length} channels`,
             ephemeral: true
         });
