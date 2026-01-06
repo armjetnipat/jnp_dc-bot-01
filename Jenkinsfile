@@ -46,6 +46,7 @@ pipeline {
               docker rm -f jnp-discord-bot-01 || true && \
               docker run -d \
                 --name jnp-discord-bot-01 \
+                --restart always \
                 -e TOKEN=${TOKEN} \
                 -e GUILD_ID=${GUILD_ID} \
                 -e CLIENT_ID=${CLIENT_ID} \
