@@ -20,7 +20,7 @@ const allowedPermissionsUser = [
 
 const commands = [
     {
-        name: 'createCat',
+        name: 'createcat',
         description: 'Create new category',
         options: [
             {
@@ -32,7 +32,7 @@ const commands = [
         ]
     },
     {
-        name: 'delCat',
+        name: 'deletecat',
         description: 'Delete category',
         options: [
             {
@@ -44,7 +44,7 @@ const commands = [
         ]
     },
     {
-        name: 'createRole',
+        name: 'createrole',
         description: 'Create new role',
         options: [
             {
@@ -56,7 +56,7 @@ const commands = [
         ]
     },
     {
-        name: 'delRole',
+        name: 'deleterole',
         description: 'Delete role',
         options: [
             {
