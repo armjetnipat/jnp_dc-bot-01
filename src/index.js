@@ -69,6 +69,16 @@ const commands = [
     }
 ];
 
+async function sendEmbed(title, description, color = 0x0099ff) {
+    const channel = await client.channels.fetch('1401616214392049684');
+    const embed = {
+        title: title,
+        description: description,
+        color: color
+    };
+    channel.send({ embeds: [embed] });
+}
+
 function normalizeCommands(commands) {
     return commands.map(cmd => ({
         name: cmd.name,
@@ -220,6 +230,11 @@ client.on("interactionCreate", async interaction => {
             ephemeral: true
         });
     }
+
+    sendEmbed(
+        `Command Executed: ${interaction.commandName}`,
+        `User: <@${interaction.user.id}> (${interaction.user.id})`
+    );
 
 });
 
