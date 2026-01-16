@@ -12,6 +12,12 @@ const client = new Client({
 
 const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
 
+const allowedPermissionsUser = [
+    '1091318537529851944',
+    '1391727009264042037',
+    '880379501534642187'
+]
+
 const commands = [
     {
         name: 'createCat',
@@ -44,6 +50,18 @@ const commands = [
             {
                 name: 'name',
                 description: 'Role name',
+                type: ApplicationCommandOptionType.String, // STRING
+                required: true
+            }
+        ]
+    },
+    {
+        name: 'delRole',
+        description: 'Delete role',
+        options: [
+            {
+                name: 'id',
+                description: 'Role id',
                 type: ApplicationCommandOptionType.String, // STRING
                 required: true
             }
@@ -115,6 +133,14 @@ client.once("clientReady", async client => {
 
 client.on("interactionCreate", async interaction => {
     if (!interaction.isChatInputCommand()) return;
+
+    if (interaction.user && !allowedPermissionsUser.includes(interaction.user.id)) {
+        await interaction.reply({
+            content: `❌ You don't have permission to use this command.`,
+            ephemeral: true
+        });
+        return;
+    }
     
     const guild = interaction.guild;
 
