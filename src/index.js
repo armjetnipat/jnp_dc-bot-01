@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { Client, GatewayIntentBits, ChannelType, REST, Routes, ApplicationCommandOptionType } = require('discord.js');
+const { Client, GatewayIntentBits, ChannelType, REST, Routes, ApplicationCommandOptionType, PermissionFlagsBits } = require('discord.js');
 
 const client = new Client({
     intents: [
@@ -14,7 +14,7 @@ const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
 
 const commands = [
     {
-        name: 'createcat',
+        name: 'createCat',
         description: 'Create new category',
         options: [
             {
@@ -26,12 +26,24 @@ const commands = [
         ]
     },
     {
-        name: 'deletecat',
+        name: 'delCat',
         description: 'Delete category',
         options: [
             {
                 name: 'id',
                 description: 'Category id',
+                type: ApplicationCommandOptionType.String, // STRING
+                required: true
+            }
+        ]
+    },
+    {
+        name: 'createRole',
+        description: 'Create new role',
+        options: [
+            {
+                name: 'name',
+                description: 'Role name',
                 type: ApplicationCommandOptionType.String, // STRING
                 required: true
             }
@@ -154,6 +166,20 @@ client.on("interactionCreate", async interaction => {
 
         await interaction.reply({
             content: `Deleted ${category.name} successfully`,
+            ephemeral: true
+        });
+    }
+
+    if (interaction.commandName === 'createrole') {
+        let roleName = interaction.options.getString('name');
+        let role = await guild.roles.create({
+            name: roleName,
+            mentionable: true,
+            permissions: []
+        });
+
+        await interaction.reply({
+            content: `Created ${role.name} successfully`,
             ephemeral: true
         });
     }
