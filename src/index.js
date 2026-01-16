@@ -210,6 +210,17 @@ client.on("interactionCreate", async interaction => {
         });
     }
 
+    if (interaction.commandName === 'delRole') {
+        let roleId = interaction.options.getString('id');
+        let role = await guild.roles.fetch(roleId);
+        await role.delete();
+
+        await interaction.reply({
+            content: `Deleted ${role.name} successfully`,
+            ephemeral: true
+        });
+    }
+
 });
 
 client.on('messageCreate', async message => {
