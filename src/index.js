@@ -1,5 +1,8 @@
 require('dotenv').config();
 const { Client, GatewayIntentBits, ChannelType, REST, Routes, ApplicationCommandOptionType, PermissionFlagsBits } = require('discord.js');
+const fs = require('fs');
+
+const PROVIDER_STATE_FILE = 'providerState.json';
 
 const client = new Client({
     intents: [
@@ -19,6 +22,18 @@ const allowedPermissionsUser = [
 ]
 
 const commands = [
+    {
+        name: 'enableAPI',
+        description: 'Enable API',
+        options: [
+            {
+                name: 'status',
+                description: 'API status',
+                type: ApplicationCommandOptionType.Boolean, // BOOLEAN
+                required: true
+            }
+        ]
+    },
     {
         name: 'createcat',
         description: 'Create new category',
@@ -69,14 +84,14 @@ const commands = [
     }
 ];
 
-async function sendEmbed(title, description, color = 0x0099ff) {
-    const channel = await client.channels.fetch('1401616214392049684');
-    const embed = {
-        title: title,
-        description: description,
-        color: color
-    };
-    channel.send({ embeds: [embed] });
+async function sendEmbed(embeded, channelId) {
+    const channel = await client.channels.fetch(channelId);
+    try {
+        channel.send({ embeds: [embeded] });
+    } catch (error) {
+        console.error('Error sending embed:', error);
+        return;
+    }
 }
 
 function normalizeCommands(commands) {
@@ -94,9 +109,67 @@ function normalizeCommands(commands) {
     .sort((a, b) => a.name.localeCompare(b.name));
 };
 
+function loadState() {
+    if (!fs.existsSync(PROVIDER_STATE_FILE)) {
+        fs.writeFileSync(PROVIDER_STATE_FILE, JSON.stringify({ lastAnnounceId: 0 }, null, 2));
+    }
+    return JSON.parse(fs.readFileSync(PROVIDER_STATE_FILE));
+}
+
+function saveState(state) {
+    fs.writeFileSync(PROVIDER_STATE_FILE, JSON.stringify(state, null, 2));
+}
+
+let state = loadState();
+let enableAPI = false;
+
+async function getProviderAnnounce() {
+    const apiUrl = `${process.env.PROVIDER_API_URL}`;
+    try {
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error fetching provider announcements:', error);
+        return [];
+    }
+}
+
+async function checkAnnouncement() {
+    if (!enableAPI) return;
+
+    const announces = await getProviderAnnounce();
+
+    const newAnnounces = announces
+        .filter(a => a.id > state.lastAnnounceId)
+        .sort((a, b) => a.id - b.id);
+
+    console.log(state);
+
+    if (newAnnounces.length === 0) return;
+
+    for (const a of newAnnounces) {
+        await sendEmbed(embeded = {
+            title: `📢 ${a.title}`,
+            description: a.content,
+            image: { url: a.image_url },
+            timestamp: new Date(a.created_at),
+            color: 0x0099ff
+        }, channelId = '1468140554222174219');
+
+        state.lastAnnounceId = a.id;
+        saveState(state);
+    }
+
+    console.log(`Sent ${newAnnounces.length} new announcement(s)`);
+}
+
 client.once("clientReady", async client => {
     console.clear();
     console.log(`Logged in as ${client.user.tag}!`);
+
+    // setInterval(checkAnnouncement, 60 * 1000);
+    await checkAnnouncement();
 
     if (!process.env.GUILD_ID || !process.env.CLIENT_ID) {
         console.error('❌ Missing GUILD_ID or CLIENT_ID');
@@ -153,6 +226,16 @@ client.on("interactionCreate", async interaction => {
     }
     
     const guild = interaction.guild;
+
+    if (interaction.commandName === 'enableapi') {
+        let status = interaction.options.getBoolean('status');
+        enableAPI = status;
+
+        await interaction.reply({
+            content: `API is now ${enableAPI ? 'enabled' : 'disabled'}.`,
+            ephemeral: true
+        });
+    }
 
     if (interaction.commandName === 'createcat') {
         let categoryName = interaction.options.getString('name');
@@ -231,10 +314,10 @@ client.on("interactionCreate", async interaction => {
         });
     }
 
-    sendEmbed(
-        `Command Executed: ${interaction.commandName}`,
-        `User: <@${interaction.user.id}> (${interaction.user.id})`
-    );
+    sendEmbed(embeded = {
+        title: `Command Executed: ${interaction.commandName}`,
+        description: `User: <@${interaction.user.id}> (${interaction.user.id})`
+    }, channelId = '1401616214392049684');
 
 });
 
