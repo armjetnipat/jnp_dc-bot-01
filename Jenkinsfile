@@ -51,6 +51,7 @@ pipeline {
                 -e TOKEN=${TOKEN} \
                 -e GUILD_ID=${GUILD_ID} \
                 -e CLIENT_ID=${CLIENT_ID} \
+                -e PROVIDER_API_URL=${PROVIDER_API_URL} \
                 jnp-discord-bot-01
             '
           """
