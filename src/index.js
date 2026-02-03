@@ -168,8 +168,8 @@ client.once("clientReady", async client => {
     console.clear();
     console.log(`Logged in as ${client.user.tag}!`);
 
-    // setInterval(checkAnnouncement, 60 * 1000);
     await checkAnnouncement();
+    setInterval(checkAnnouncement, 3 * 60 * 1000);
 
     if (!process.env.GUILD_ID || !process.env.CLIENT_ID) {
         console.error('❌ Missing GUILD_ID or CLIENT_ID');
