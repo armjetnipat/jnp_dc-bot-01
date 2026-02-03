@@ -23,7 +23,7 @@ const allowedPermissionsUser = [
 
 const commands = [
     {
-        name: 'enableAPI',
+        name: 'enableapi',
         description: 'Enable API',
         options: [
             {
