@@ -346,4 +346,60 @@ client.on('messageCreate', async message => {
     );
 });
 
+client.on("guildMemberAdd", async member => {
+    await sendEmbed(
+        (embeded = {
+            color: 0x00ff88,
+            author: {
+                name: "🎉 Welcome!",
+                icon_url: member.guild.iconURL({ size: 256, extension: "png" }) || undefined,
+            },
+            title: `ยินดีต้อนรับ ${member.user.username} 👋`,
+            description: [
+                `> **<@${member.user.id}> เข้าสู่เซิฟเวอร์แล้ว!**`,
+                ``,
+                `💬 พูดคุยกันได้ที่ <#1397254366456713369>`,
+                `📌 อย่าลืมอ่านกฎด้วยนะครับ`,
+            ].join("\n"),
+            thumbnail: {
+                url: member.user.displayAvatarURL({ size: 256, extension: "png" }),
+            },
+            footer: {
+                text: `สมาชิกทั้งหมด: ${member.guild.memberCount.toLocaleString()} คน`,
+                icon_url: member.user.displayAvatarURL({ size: 128, extension: "png" }),
+            },
+            timestamp: new Date(),
+        }),
+        (channelId = "1392216954051231754")
+    );
+});
+
+client.on("guildMemberRemove", async member => {
+    await sendEmbed(
+        (embeded = {
+            color: 0xff5555,
+            author: {
+                name: "👋 Goodbye!",
+                icon_url: member.guild.iconURL({ size: 256, extension: "png" }) || undefined,
+            },
+            title: `ลาก่อน ${member.user.username} 😢`,
+            description: [
+                `> **<@${member.user.id}> ออกจากเซิฟเวอร์แล้ว**`,
+                ``,
+                `หวังว่าจะได้เจอกันใหม่อีกนะครับ ❤️`,
+            ].join("\n"),
+            thumbnail: {
+                url: member.user.displayAvatarURL({ size: 256, extension: "png" }),
+            },
+            footer: {
+                text: `สมาชิกคงเหลือ: ${member.guild.memberCount.toLocaleString()} คน`,
+                icon_url: member.guild.iconURL({ size: 128, extension: "png" }) || undefined,
+            },
+            timestamp: new Date(),
+        }),
+        (channelId = "1392216954051231754")
+    );
+
+});
+
 client.login(process.env.TOKEN);
