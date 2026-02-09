@@ -3,11 +3,11 @@ pipeline {
 
   environment {
     // ดึงค่าจาก Jenkins Credentials
-    TOKEN         = credentials('DC_BOT_01')
-    SSH_CRED_ID   = 'SSH_SV_01' // ID ที่เราตั้งใน Jenkins Credentials
-    REMOTE_IP     = '192.168.1.200'
-    REMOTE_USER   = 'root' 
-    TARGET_DIR    = '~/jnp-discord-bot-01' // โฟลเดอร์ที่จะเอาโค้ดไปวาง
+    TOKEN         = credentials("DC_BOT_01")
+    SSH_CRED_ID   = "SSH_SV_01" // ID ที่เราตั้งใน Jenkins Credentials
+    REMOTE_IP     = "192.168.1.200"
+    REMOTE_USER   = "root" 
+    TARGET_DIR    = "~/jnp-discord-bot-01" // โฟลเดอร์ที่จะเอาโค้ดไปวาง
     GUILD_ID      = "1392216672781205595"
     CLIENT_ID     = "1452912537711546378"
     PROVIDER_API_URL = "https://munjai-solution.com/api/announcement"
