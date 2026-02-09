@@ -43,7 +43,7 @@ pipeline {
           // 3. สั่งรัน Container บนเครื่องปลายทาง
           // หมายเหตุ: ต้องส่งค่า Environment Variables เข้าไปด้วย
           sh """
-            ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_IP} '
+            ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_IP} "
               docker rm -f jnp-discord-bot-01 || true && \
               docker run -d \
                 --name jnp-discord-bot-01 \
@@ -53,7 +53,7 @@ pipeline {
                 -e CLIENT_ID=${CLIENT_ID} \
                 -e PROVIDER_API_URL=${PROVIDER_API_URL} \
                 jnp-discord-bot-01
-            '
+            "
           """
         }
       }
