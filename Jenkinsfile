@@ -27,12 +27,12 @@ pipeline {
           sh "rsync -avz --exclude '.git' ./ ${REMOTE_USER}@${REMOTE_IP}:${TARGET_DIR}"
 
           // 2. สั่ง Build Docker บนเครื่องปลายทาง
-          sh """
-            ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_IP} '
+          sh '''
+            ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_IP} "
               cd ${TARGET_DIR} && \
               docker build -t jnp-discord-bot-01 .
-            '
-          """
+            "
+          '''
         }
       }
     }
@@ -42,19 +42,19 @@ pipeline {
         sshagent([env.SSH_CRED_ID]) {
           // 3. สั่งรัน Container บนเครื่องปลายทาง
           // หมายเหตุ: ต้องส่งค่า Environment Variables เข้าไปด้วย
-          sh """
+          sh '''
             ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_IP} "
               docker rm -f jnp-discord-bot-01 || true && \
               docker run -d \
                 --name jnp-discord-bot-01 \
                 --restart always \
-                -e TOKEN=${TOKEN} \
+                -e TOKEN=$TOKEN \
                 -e GUILD_ID=${GUILD_ID} \
                 -e CLIENT_ID=${CLIENT_ID} \
                 -e PROVIDER_API_URL=${PROVIDER_API_URL} \
                 jnp-discord-bot-01
             "
-          """
+          '''
         }
       }
     }
