@@ -10,7 +10,9 @@ pipeline {
     TARGET_DIR    = "~/jnp-discord-bot-01" // โฟลเดอร์ที่จะเอาโค้ดไปวาง
     GUILD_ID      = "1392216672781205595"
     CLIENT_ID     = "1452912537711546378"
-    PROVIDER_API_URL = "https://munjai-solution.com/api/"
+    PROVIDER_API_URL = "https://munjai-solution.com"
+    API_EMAIL     = "armjetnipat@gmail.com"
+    API_PASSWORD. = "Arm019905"
   }
 
   triggers {

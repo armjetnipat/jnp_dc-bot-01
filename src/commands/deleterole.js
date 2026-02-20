@@ -15,6 +15,9 @@ module.exports = {
         const id = interaction.options.getString('id');
         const role = await interaction.guild.roles.fetch(id);
         await role.delete();
-        await interaction.reply({ content: 'Deleted', ephemeral: true });
+        await interaction.reply({
+            content: `Deleted ${role.name} successfully`,
+            ephemeral: true
+        });
     }
 };

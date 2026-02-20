@@ -15,6 +15,9 @@ module.exports = {
         const id = interaction.options.getString('id');
         const category = await interaction.guild.channels.fetch(id);
         await category.delete();
-        await interaction.reply({ content: 'Deleted', ephemeral: true });
+        await interaction.reply({
+            content: `Deleted ${category.name} successfully`,
+            ephemeral: true
+        });
     }
 };

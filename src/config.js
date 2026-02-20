@@ -7,8 +7,6 @@ module.exports = {
     channels: {
         commandLog: '1401616214392049684',
         welcome: '1392216954051231754',
-        notifyFrom: '1452926114279329888',
-        notifyTo: '1452926112333299743'
     },
-    roleNotify: '1452896740330967071'
+    vpsNotifyRole: '1474324642452733962'
 };

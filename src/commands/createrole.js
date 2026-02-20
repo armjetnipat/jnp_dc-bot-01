@@ -17,6 +17,9 @@ module.exports = {
             name,
             mentionable: true
         });
-        await interaction.reply({ content: `Created ${role.name}`, ephemeral: true });
+        await interaction.reply({
+            content: `Created ${role.name} successfully`,
+            ephemeral: true
+        });
     }
 };

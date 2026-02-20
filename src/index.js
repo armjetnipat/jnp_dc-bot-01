@@ -15,13 +15,15 @@ const client = new Client({
 
 client.commands = new Collection();
 
-const commandFiles = fs.readdirSync('./src/commands');
+const commandsPath = path.join(__dirname, 'commands');
+const commandFiles = fs.readdirSync(commandsPath);
 for (const file of commandFiles) {
     const command = require(`./commands/${file}`);
     client.commands.set(command.data.name, command);
 }
 
-const eventFiles = fs.readdirSync('./src/events');
+const eventsPath = path.join(__dirname, 'events');
+const eventFiles = fs.readdirSync(eventsPath);
 for (const file of eventFiles) {
     const event = require(`./events/${file}`);
     if (event.once) {
