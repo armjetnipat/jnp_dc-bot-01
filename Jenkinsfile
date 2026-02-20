@@ -12,7 +12,12 @@ pipeline {
     CLIENT_ID     = "1452912537711546378"
     PROVIDER_API_URL = "https://munjai-solution.com"
     API_EMAIL     = "armjetnipat@gmail.com"
-    API_PASSWORD. = "Arm019905"
+    API_PASSWORD  = "Arm019905"
+    NOTIFY_CHANNEL_ID = "1474283136463667284"
+    REDIS_HOST = "192.168.1.200"
+    REDIS_PORT = "6379"
+    REDIS_PASSWORD = "Arm019905"
+
   }
 
   triggers {
@@ -54,6 +59,12 @@ pipeline {
                 -e GUILD_ID=${GUILD_ID} \
                 -e CLIENT_ID=${CLIENT_ID} \
                 -e PROVIDER_API_URL=${PROVIDER_API_URL} \
+                -e API_EMAIL=${API_EMAIL} \
+                -e API_PASSWORD=${API_PASSWORD} \
+                -e NOTIFY_CHANNEL_ID=${NOTIFY_CHANNEL_ID} \
+                -e REDIS_HOST=${REDIS_HOST} \
+                -e REDIS_PORT=${REDIS_PORT} \
+                -e REDIS_PASSWORD=${REDIS_PASSWORD} \
                 jnp-discord-bot-01
             "
           '''
