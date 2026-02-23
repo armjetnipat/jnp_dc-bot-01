@@ -1,6 +1,8 @@
 const { EmbedBuilder } = require('discord.js');
 const { log } = require('../utils/logger');
 const { getMyVps } = require('../services/vps');
+const { redis } = require('../services/redis');
+const config = require('../config');
 
 function formatThaiDate(dateString) {
     return new Date(dateString).toLocaleString('th-TH', {
@@ -28,26 +30,31 @@ module.exports = function startVpsChecker(client) {
 
             log(`VPS ${vps.nickname || vps.label} is currently ${vps.status}`);
 
-            // const embed = new EmbedBuilder()
-            //     .setColor(getStatusColor(vps.status))
-            //     .setTitle(`🖥️ ${vps.nickname || vps.label}`)
-            //     .setDescription(`สถานะ: **${vps.status.toUpperCase()}**`)
-            //     .addFields(
-            //         { name: '🧩 OS', value: vps.os, inline: true },
-            //         { name: '⚙️ CPU', value: `${vps.cpu} Core`, inline: true },
-            //         { name: '🧠 RAM', value: `${vps.ram} GB`, inline: true },
-            //         { name: '💾 Storage', value: `${vps.storage} GB`, inline: true },
-            //         { name: '🌐 IP', value: vps.ip, inline: true },
-            //         { name: '💰 ราคา', value: `${vps.price} บาท / ${vps.billing_cycle} วัน`, inline: true },
-            //         { name: '📅 หมดอายุ', value: formatThaiDate(vps.expired_at), inline: false },
-            //     )
-            //     .setFooter({ text: `VMID: ${vps.vmid}` })
-            //     .setTimestamp();
+            const redisKey = `vps_${vps.vmid}`;
+            const isStored = await redis.get(redisKey);
 
-            // const channel = await client.channels.fetch(process.env.NOTIFY_CHANNEL_ID);
-            // if (channel) {
-            //     await channel.send({ embeds: [embed] });
-            // }
+            if (!isStored) continue;
+
+            const embed = new EmbedBuilder()
+                .setColor(getStatusColor(vps.status))
+                .setTitle(`🖥️ ${vps.nickname || vps.label}`)
+                .setDescription(`สถานะ: **${vps.status.toUpperCase()}**`)
+                .addFields(
+                    { name: '🧩 OS', value: vps.os, inline: true },
+                    { name: '⚙️ CPU', value: `${vps.cpu} Core`, inline: true },
+                    { name: '🧠 RAM', value: `${vps.ram} GB`, inline: true },
+                    { name: '💾 Storage', value: `${vps.storage} GB`, inline: true },
+                    { name: '🌐 IP', value: vps.ip, inline: true },
+                )
+                .setFooter({ text: `VMID: ${vps.vmid}` })
+                .setTimestamp();
+
+            await redis.setEx(redisKey, 60, '1');
+
+            const channel = await client.channels.fetch(config.vpsCurrentChannelId);
+            if (channel) {
+                await channel.send({ embeds: [embed] });
+            }
         }
     }
 

@@ -8,5 +8,7 @@ module.exports = {
         commandLog: '1401616214392049684',
         welcome: '1392216954051231754',
     },
-    vpsNotifyRole: '1474324642452733962'
+    vpsNotifyRoleId: '1474324642452733962',
+    vpsNotifyChannelId: '1474283136463667284',
+    vpsCurrentChannelId: '1475406101330788516'
 };

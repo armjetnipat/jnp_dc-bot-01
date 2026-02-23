@@ -3,7 +3,7 @@ const { getMyVps } = require('../services/vps');
 const { redis } = require('../services/redis');
 const config = require('../config');
 
-const CHANNEL_ID = process.env.NOTIFY_CHANNEL_ID;
+const CHANNEL_ID = config.vpsNotifyChannelId;
 
 const DAY = 24 * 60 * 60 * 1000;
 
@@ -56,7 +56,7 @@ module.exports = function startExpireChecker(client) {
                         .setFooter({ text: `VPS ID: ${vps.id}` })
                         .setTimestamp();
 
-                    await channel.send({ embeds: [embed], content: `<@&${config.vpsNotifyRole}>` });
+                    await channel.send({ embeds: [embed], content: `<@&${config.vpsNotifyRoleId}>` });
 
                     await redis.setEx(redisKey, Math.floor(diff / 1000), '1');
                 }
