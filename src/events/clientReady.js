@@ -14,7 +14,7 @@ module.exports = {
         });
 
         connectRedis();
-        startVpsChecker(client);
+        // startVpsChecker(client);
         startExpireChecker(client);
     }
 };

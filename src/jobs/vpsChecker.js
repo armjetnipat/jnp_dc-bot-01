@@ -33,7 +33,9 @@ module.exports = function startVpsChecker(client) {
             const redisKey = `vps_${vps.vmid}`;
             const isStored = await redis.get(redisKey);
 
-            if (!isStored) continue;
+            log(`Checking Redis key ${redisKey}: ${isStored}`);
+
+            if (isStored) continue;
 
             const embed = new EmbedBuilder()
                 .setColor(getStatusColor(vps.status))
@@ -49,7 +51,9 @@ module.exports = function startVpsChecker(client) {
                 .setFooter({ text: `VMID: ${vps.vmid}` })
                 .setTimestamp();
 
-            await redis.setEx(redisKey, 60, '1');
+            await redis.set(redisKey, '1');
+            await redis.persist(redisKey);
+            log(`Set Redis key ${redisKey} to track VPS status`);
 
             const channel = await client.channels.fetch(config.vpsCurrentChannelId);
             if (channel) {

@@ -2,13 +2,15 @@ const { EmbedBuilder } = require('discord.js');
 const { getMyVps } = require('../services/vps');
 const { redis } = require('../services/redis');
 const config = require('../config');
+const { log } = require('../utils/logger');
 
 const CHANNEL_ID = config.vpsNotifyChannelId;
 
 const DAY = 24 * 60 * 60 * 1000;
 
 const ALERT_LEVELS = [
-    { days: 15, color: 0xffcc00 },
+    // { days: 35, color: 0xff0000 },
+    // { days: 15, color: 0xffcc00 },
     { days: 7, color: 0xffcc00 },
     { days: 3, color: 0xff9900 },
     { days: 1, color: 0xff0000 }
