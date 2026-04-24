@@ -1,25 +1,22 @@
 const api = require('./api');
-const { login, getToken } = require('./auth');
 const { log } = require('../utils/logger');
 
 async function getMyVps() {
-    const token = await getToken();
 
     try {
-        const { data } = await api.get('/api/my-vps', {
+        const { data } = await api.get('/api/v1/my-vps', {
             headers: {
-                Authorization: `Bearer ${token}`
+                "x-api-key": `${process.env.API_TOKEN}`
             }
         });
 
         return data;
     } catch (err) {
         if (err.response?.status === 401) {
-            token = await login();
 
-            const { data } = await api.get('/api/my-vps', {
+            const { data } = await api.get('/api/v1/my-vps', {
                 headers: {
-                    Authorization: `Bearer ${token}`
+                    "x-api-key": `${process.env.API_TOKEN}`
                 }
             });
 

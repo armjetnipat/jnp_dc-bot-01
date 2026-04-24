@@ -4,6 +4,7 @@ pipeline {
   environment {
     // ดึงค่าจาก Jenkins Credentials
     TOKEN         = credentials("DC_BOT_01")
+    API_TOKEN       = credentials("MUNJAI_API_TOKEN")
     SSH_CRED_ID   = "SSH_SV_01" // ID ที่เราตั้งใน Jenkins Credentials
     REMOTE_IP     = "192.168.1.200"
     REMOTE_USER   = "root" 
@@ -65,6 +66,7 @@ pipeline {
                 -e REDIS_HOST=${REDIS_HOST} \
                 -e REDIS_PORT=${REDIS_PORT} \
                 -e REDIS_PASSWORD=${REDIS_PASSWORD} \
+                -e API_TOKEN=${API_TOKEN} \
                 jnp-discord-bot-01
             "
           '''
